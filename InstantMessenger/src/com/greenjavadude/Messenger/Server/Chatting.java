@@ -33,7 +33,7 @@ public class Chatting implements Runnable{
 				Thread.sleep(5);
 			}
 		}catch(Exception e){
-			
+			System.out.println("Whoops...");
 		}
 	}
 	
