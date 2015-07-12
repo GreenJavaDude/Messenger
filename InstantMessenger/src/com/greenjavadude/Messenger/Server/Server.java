@@ -1,10 +1,9 @@
 package com.greenjavadude.Messenger.Server;
 
 import java.awt.BorderLayout;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.Stack;
 
 import javax.swing.*;
 
@@ -12,13 +11,28 @@ public class Server extends JFrame implements Runnable{
 	private static final long serialVersionUID = 1L;
 	
 	private boolean running;
+	private boolean workingConnection;
+	
+	private Connecting connecting;
+	private Chatting chatting;
 	
 	private JTextArea area;
+	
+	private ServerSocket server;
+	
+	private Stack<Stuff> people;
 	
 	public Server(){
 		super("Messenger Server");
 		
 		running = false;
+		workingConnection = false;
+		people = new Stack<Stuff>();
+		
+		connecting = new Connecting(this);
+		chatting = new Chatting(this);
+		
+		area = new JTextArea();
 		
 		area.setEditable(false);
 		
@@ -26,16 +40,27 @@ public class Server extends JFrame implements Runnable{
 		
 		setSize(500, 300);
 		setVisible(true);
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	public void run(){
 		try{
+			server = new ServerSocket(7777, 50);
+			connecting.start();
 			while(running){
-				//stay available, it's a server
+				if(workingConnection){
+					chatting.start();
+				}else{
+					chatting.stop();
+				}
+				
+				update();
+				
+				Thread.sleep(5);
 			}
 		}catch(Exception e){
-			
+			System.out.println("Oops.\n");
 		}
 	}
 	
@@ -46,22 +71,58 @@ public class Server extends JFrame implements Runnable{
 	
 	public void stop(){
 		running = false;
+		connecting.stop();
 		System.exit(0);
 	}
 	
+	public void sendMessage(String message, ObjectOutputStream output){
+		try {
+			output.writeObject(message);
+		} catch (IOException e) {
+			System.out.println("Couldn't send message");
+		}
+	}
+	
+	public void showMessage(final String text){
+		SwingUtilities.invokeLater(new Runnable(){
+			public void run(){
+				area.append(text+"\n");
+			}
+		});
+	}
+	
+	public void update(){
+		if(people.isEmpty()){
+			workingConnection = false;
+		}else{
+			workingConnection = true;
+		}
+	}
+	
+	public void disconnected(Stuff stuff){
+		if(people.contains(stuff)){
+			try{
+				stuff.getInput().close();
+				stuff.getOutput().close();
+				stuff.getConnection().close();
+			}catch(Exception e){
+				System.out.println("Couldn't disconnect properly");
+			}
+			people.remove(stuff);
+		}
+	}
+	
+	
 	public static void main(String[] args){
 		Server server = new Server();
+		server.start();
+	}
+	
+	public ServerSocket getServerSocket(){
+		return server;
+	}
+	
+	public Stack<Stuff> getPeople(){
+		return people;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
