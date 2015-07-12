@@ -1,6 +1,8 @@
 package com.greenjavadude.Messenger.Server;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class Connecting implements Runnable{
@@ -17,10 +19,16 @@ public class Connecting implements Runnable{
 			while(running){
 				try{
 					Socket sock = checkForConnection();
+					if(sock.equals(null)){
+						System.out.println("Socket == null");
+					}
+					InputStream inpu = sock.getInputStream();
+					ObjectInputStream input = new ObjectInputStream(inpu);
 					//connection found
 					Stuff stuff = new Stuff(sock);
 					server.getPeople().push(stuff);
 				}catch(Exception e){
+					e.printStackTrace();
 					System.out.println("Connection Failed\n");
 				}
 				

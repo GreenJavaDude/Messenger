@@ -47,6 +47,8 @@ public class Client extends JFrame implements Runnable{
 					stop();
 				}else{
 					sendMessage(text, output);
+					showMessage(text);
+					field.setText("");
 				}
 			}
 		});
@@ -95,7 +97,7 @@ public class Client extends JFrame implements Runnable{
 	public void sendMessage(String message, ObjectOutputStream output){
 		try {
 			output.writeObject(name + ": " + message);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			System.out.println("Couldn't send message");
 		}
 	}

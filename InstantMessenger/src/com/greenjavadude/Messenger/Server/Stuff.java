@@ -3,7 +3,9 @@ package com.greenjavadude.Messenger.Server;
 import java.io.*;
 import java.net.*;
 
-public class Stuff {
+public class Stuff implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	private final Socket connection;
 	private final ObjectInputStream input;
 	private final ObjectOutputStream output;
