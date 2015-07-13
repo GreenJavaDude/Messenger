@@ -12,6 +12,7 @@ public class Server extends JFrame implements Runnable{
 	
 	private boolean running;
 	private boolean workingConnection;
+	private boolean chicken;
 	
 	private Connecting connecting;
 	private Chatting chatting;
@@ -27,6 +28,7 @@ public class Server extends JFrame implements Runnable{
 		
 		running = false;
 		workingConnection = false;
+		chicken = false;
 		people = new Stack<Stuff>();
 		
 		connecting = new Connecting(this);
@@ -50,9 +52,13 @@ public class Server extends JFrame implements Runnable{
 			connecting.start();
 			while(running){
 				if(workingConnection){
-					chatting.start();
+					if(!chicken){
+						chatting.start();
+						chicken = true;
+					}
 				}else{
 					chatting.stop();
+					chicken = false;
 				}
 				
 				update();
@@ -100,6 +106,7 @@ public class Server extends JFrame implements Runnable{
 	}
 	
 	public void disconnected(Stuff stuff){
+		String guy = stuff.getConnection().getInetAddress().getHostName();
 		if(people.contains(stuff)){
 			try{
 				stuff.getInput().close();
@@ -110,6 +117,7 @@ public class Server extends JFrame implements Runnable{
 			}
 			people.remove(stuff);
 		}
+		showMessage(guy+" disconnected");
 	}
 	
 	

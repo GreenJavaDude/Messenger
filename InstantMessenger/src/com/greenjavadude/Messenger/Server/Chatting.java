@@ -14,11 +14,11 @@ public class Chatting implements Runnable{
 		try{
 			String message = "";
 			while(running){
-				
 				for(Stuff aThing:server.getPeople()){
 					if(aThing.getInput().available() > 0){
+						System.out.println("ready to read object");
 						message = (String) aThing.getInput().readObject();
-						
+						System.out.println("read object");
 						if(message.endsWith("END")){
 							server.disconnected(aThing);
 						}else{

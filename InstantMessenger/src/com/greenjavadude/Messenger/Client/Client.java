@@ -3,6 +3,8 @@ package com.greenjavadude.Messenger.Client;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -46,12 +48,17 @@ public class Client extends JFrame implements Runnable{
 					shutdown();
 					stop();
 				}else{
-					sendMessage(text, output);
-					showMessage(text);
+					sendMessage(text);
 					field.setText("");
 				}
 			}
 		});
+		
+		addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent e){
+                stop();
+            }
+        });
 		
 		add(area, BorderLayout.CENTER);
 		add(field, BorderLayout.NORTH);
@@ -68,8 +75,11 @@ public class Client extends JFrame implements Runnable{
 			String message;
 			while(running){
 				try{
-					message = (String) input.readObject();
-					showMessage(message);
+					if(input.available() > 0){
+						System.out.println("Input is available");
+						message = (String) input.readObject();
+						showMessage(message);
+					}
 				}catch(Exception e){
 					System.out.println("Couldn't recieve message");
 				}
@@ -91,10 +101,11 @@ public class Client extends JFrame implements Runnable{
 	
 	public void stop(){
 		running = false;
+		shutdown();
 		System.exit(0);
 	}
 	
-	public void sendMessage(String message, ObjectOutputStream output){
+	public void sendMessage(String message){
 		try {
 			output.writeObject(name + ": " + message);
 		} catch (Exception e) {
@@ -118,6 +129,7 @@ public class Client extends JFrame implements Runnable{
 	
 	public void shutdown(){
 		try{
+			sendMessage("END");
 			input.close();
 			output.close();
 			connection.close();
