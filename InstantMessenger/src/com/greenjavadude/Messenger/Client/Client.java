@@ -51,7 +51,7 @@ public class Client extends JFrame implements Runnable{
             }
         });
 		
-		add(area, BorderLayout.CENTER);
+		add(new JScrollPane(area), BorderLayout.CENTER);
 		add(field, BorderLayout.NORTH);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -134,7 +134,7 @@ public class Client extends JFrame implements Runnable{
 	}
 	
 	public static void main(String[] args){
-		String s = JOptionPane.showInputDialog(null, "Enter IPv6 address", "Input example", JOptionPane.QUESTION_MESSAGE);
+		String s = JOptionPane.showInputDialog(null, "Enter IPv4 address", "Input example", JOptionPane.QUESTION_MESSAGE);
 		String n = JOptionPane.showInputDialog(null, "Enter username", "Input example", JOptionPane.QUESTION_MESSAGE);
 		Client client = new Client(s, n);
 		client.start();
