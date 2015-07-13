@@ -20,6 +20,7 @@ public class Connecting implements Runnable{
 					Stuff stuff = new Stuff(sock);
 					server.getPeople().push(stuff);
 					System.out.println("Successful connection.");
+					server.sendMessage("You're successfully connected with the server", stuff.getOutput());
 				}catch(Exception e){
 					e.printStackTrace();
 					System.out.println("Connection Failed\n");

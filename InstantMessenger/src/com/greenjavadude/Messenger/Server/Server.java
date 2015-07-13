@@ -78,12 +78,14 @@ public class Server extends JFrame implements Runnable{
 	public void stop(){
 		running = false;
 		connecting.stop();
+		chatting.stop();
 		System.exit(0);
 	}
 	
 	public void sendMessage(String message, ObjectOutputStream output){
 		try {
 			output.writeObject(message);
+			System.out.println("Sent a message successfully");
 		} catch (IOException e) {
 			System.out.println("Couldn't send message");
 		}
