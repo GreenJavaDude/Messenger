@@ -134,7 +134,7 @@ public class Client extends JFrame implements Runnable{
 	}
 	
 	public static void main(String[] args){
-		String s = JOptionPane.showInputDialog(null, "Enter ip address", "Input example", JOptionPane.QUESTION_MESSAGE);
+		String s = JOptionPane.showInputDialog(null, "Enter IPv6 address", "Input example", JOptionPane.QUESTION_MESSAGE);
 		String n = JOptionPane.showInputDialog(null, "Enter username", "Input example", JOptionPane.QUESTION_MESSAGE);
 		Client client = new Client(s, n);
 		client.start();
