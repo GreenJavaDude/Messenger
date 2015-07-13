@@ -12,27 +12,23 @@ public class Server extends JFrame implements Runnable{
 	
 	private boolean running;
 	private boolean workingConnection;
-	private boolean chicken;
 	
 	private Connecting connecting;
-	private Chatting chatting;
 	
 	private JTextArea area;
 	
 	private ServerSocket server;
 	
-	private Stack<Stuff> people;
+	private Stack<Talker> people;
 	
 	public Server(){
 		super("Messenger Server");
 		
 		running = false;
 		workingConnection = false;
-		chicken = false;
-		people = new Stack<Stuff>();
+		people = new Stack<Talker>();
 		
 		connecting = new Connecting(this);
-		chatting = new Chatting(this);
 		
 		area = new JTextArea();
 		
@@ -51,15 +47,8 @@ public class Server extends JFrame implements Runnable{
 			server = new ServerSocket(7777, 50);
 			connecting.start();
 			while(running){
-				if(workingConnection){
-					if(!chicken){
-						chatting.start();
-						chicken = true;
-					}
-				}else{
-					chatting.stop();
-					chicken = false;
-				}
+				
+				
 				
 				update();
 				
@@ -77,11 +66,13 @@ public class Server extends JFrame implements Runnable{
 	
 	public void stop(){
 		running = false;
-		for(Stuff aThing:people){
-			disconnected(aThing);
+		//for(Stuff aThing:people){
+		//	disconnected(aThing);
+		//}
+		for(Talker aTalker:people){
+			disconnected(aTalker);
 		}
 		connecting.stop();
-		chatting.stop();
 		System.exit(0);
 	}
 	
@@ -110,19 +101,23 @@ public class Server extends JFrame implements Runnable{
 		}
 	}
 	
-	public void disconnected(Stuff stuff){
-		String guy = stuff.getConnection().getInetAddress().getHostName();
-		if(people.contains(stuff)){
+	public void disconnected(Talker talk){
+		String guy = talk.getStuff().getConnection().getInetAddress().getHostName();
+		if(people.contains(talk)){
 			try{
-				stuff.getInput().close();
-				stuff.getOutput().close();
-				stuff.getConnection().close();
+				talk.getStuff().getInput().close();
+				talk.getStuff().getOutput().close();
+				talk.getStuff().getConnection().close();
+				talk.stop();
 			}catch(Exception e){
 				System.out.println("Couldn't disconnect properly");
 			}
-			people.remove(stuff);
+			people.remove(talk);
 		}
 		showMessage(guy+" disconnected");
+		for(Talker aTalker:people){
+			sendMessage(guy+" disconnected", aTalker.getStuff().getOutput());
+		}
 	}
 	
 	
@@ -135,7 +130,7 @@ public class Server extends JFrame implements Runnable{
 		return server;
 	}
 	
-	public Stack<Stuff> getPeople(){
+	public Stack<Talker> getPeople(){
 		return people;
 	}
 	

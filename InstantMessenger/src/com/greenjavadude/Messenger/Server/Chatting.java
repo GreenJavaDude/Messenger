@@ -1,19 +1,24 @@
 package com.greenjavadude.Messenger.Server;
 
-import java.io.IOException;
 
-
+@Deprecated
 public class Chatting implements Runnable{
-	private boolean running;
-	private Server server;
 	
 	public Chatting(Server s){
-		server = s;
-		running = false;
 	}
 	
 	public void run(){
-		try{//if noone is connected can't loop throught people
+		try{
+			
+			
+			
+			
+			
+			
+			
+			
+			Thread.sleep(5);
+			/*
 			String message = "";
 			Stuff thingy = null;
 			boolean beef = false;
@@ -21,11 +26,20 @@ public class Chatting implements Runnable{
 				try{
 					for(Stuff aThing:server.getPeople()){
 						try{
+							aThing.getInput().
+							
+							
+							
+							
+							
 							if(aThing.getInput().available() > 0){
+								System.out.println("Input is available");
 								message = (String) aThing.getInput().readObject();
 								beef = true;
 								thingy = aThing;
 								break;
+							}else{
+								System.out.println("Input is not available");
 							}
 						}catch(IOException e){
 							
@@ -37,11 +51,13 @@ public class Chatting implements Runnable{
 						System.out.println("Error");
 					}
 				}
-				
+				System.out.println("Checking for beef");
 				if(beef){
+					System.out.println("Beef is true");
 					if(message.endsWith("END")){
 						server.disconnected(thingy);
 					}else{
+						System.out.println("Rebouncing the message to all the listeners");
 						for(Stuff aStuff:server.getPeople()){
 							server.sendMessage(message, aStuff.getOutput());
 						}
@@ -51,8 +67,8 @@ public class Chatting implements Runnable{
 					beef = false;
 					message = "";
 				}
+				*/
 				
-				Thread.sleep(5);
 				//these aren't really working  |
 				//							   |
 				//							   |
@@ -100,7 +116,6 @@ public class Chatting implements Runnable{
 					}
 				}
 				*/
-			}
 			
 			
 		}catch(Exception e){
@@ -111,11 +126,9 @@ public class Chatting implements Runnable{
 	}
 	
 	public void start(){
-		running = true;
 		new Thread(this).start();
 	}
 	
 	public void stop(){
-		running = false;
 	}
 }

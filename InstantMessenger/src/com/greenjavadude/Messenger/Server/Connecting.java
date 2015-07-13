@@ -18,7 +18,10 @@ public class Connecting implements Runnable{
 					Socket sock = server.getServerSocket().accept();
 					//connection found
 					Stuff stuff = new Stuff(sock);
-					server.getPeople().push(stuff);
+					Talker talker = new Talker(stuff, server);
+					server.getPeople().push(talker);
+					talker.start();
+					
 					System.out.println("Successful connection.");
 					server.sendMessage("You're successfully connected with the server", stuff.getOutput());
 				}catch(Exception e){
