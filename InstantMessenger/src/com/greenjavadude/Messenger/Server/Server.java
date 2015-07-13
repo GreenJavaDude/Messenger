@@ -66,9 +66,6 @@ public class Server extends JFrame implements Runnable{
 	
 	public void stop(){
 		running = false;
-		//for(Stuff aThing:people){
-		//	disconnected(aThing);
-		//}
 		for(Talker aTalker:people){
 			disconnected(aTalker);
 		}
