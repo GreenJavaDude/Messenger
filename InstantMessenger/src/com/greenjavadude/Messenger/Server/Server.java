@@ -77,6 +77,9 @@ public class Server extends JFrame implements Runnable{
 	
 	public void stop(){
 		running = false;
+		for(Stuff aThing:people){
+			disconnected(aThing);
+		}
 		connecting.stop();
 		chatting.stop();
 		System.exit(0);
@@ -134,5 +137,9 @@ public class Server extends JFrame implements Runnable{
 	
 	public Stack<Stuff> getPeople(){
 		return people;
+	}
+	
+	public boolean getWorkingConnection(){
+		return workingConnection;
 	}
 }

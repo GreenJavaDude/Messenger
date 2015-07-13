@@ -1,5 +1,7 @@
 package com.greenjavadude.Messenger.Server;
 
+import java.io.IOException;
+
 
 public class Chatting implements Runnable{
 	private boolean running;
@@ -13,8 +15,49 @@ public class Chatting implements Runnable{
 	public void run(){
 		try{//if noone is connected can't loop throught people
 			String message = "";
+			Stuff thingy = null;
+			boolean beef = false;
 			while(running){
+				try{
+					for(Stuff aThing:server.getPeople()){
+						try{
+							if(aThing.getInput().available() > 0){
+								message = (String) aThing.getInput().readObject();
+								beef = true;
+								thingy = aThing;
+								break;
+							}
+						}catch(IOException e){
+							
+						}
+					}
+				}catch(Exception e){
+					//noone connected
+					if(server.getWorkingConnection()){
+						System.out.println("Error");
+					}
+				}
 				
+				if(beef){
+					if(message.endsWith("END")){
+						server.disconnected(thingy);
+					}else{
+						for(Stuff aStuff:server.getPeople()){
+							server.sendMessage(message, aStuff.getOutput());
+						}
+						server.showMessage(message);
+					}
+					thingy = null;
+					beef = false;
+					message = "";
+				}
+				
+				Thread.sleep(5);
+				//these aren't really working  |
+				//							   |
+				//							   |
+				//							   V
+				/*
 				for(Stuff aThing:server.getPeople()){
 					try{
 						Object obj = aThing.getInput().readObject();
@@ -34,9 +77,9 @@ public class Chatting implements Runnable{
 					}
 				}
 				
+				*/
 				
 				
-				Thread.sleep(5);
 				//this is not really working   |
 				//							   |
 				//							   |

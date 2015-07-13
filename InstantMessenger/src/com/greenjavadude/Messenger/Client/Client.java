@@ -37,7 +37,6 @@ public class Client extends JFrame implements Runnable{
 			public void actionPerformed(ActionEvent e){
 				String text = field.getText();
 				if(text.equals("exit")){
-					shutdown();
 					stop();
 				}else{
 					sendMessage(text);
@@ -78,7 +77,7 @@ public class Client extends JFrame implements Runnable{
 				Thread.sleep(5);
 			}
 		}catch(Exception e){
-			shutdown();
+			stop();
 			System.out.println("Oops.");
 		}
 	}
@@ -90,7 +89,14 @@ public class Client extends JFrame implements Runnable{
 	
 	public void stop(){
 		running = false;
-		shutdown();
+		try{
+			sendMessage("END");
+			input.close();
+			output.close();
+			connection.close();
+		}catch(Exception e){
+			System.out.println("Couldn't shutdown");
+		}
 		System.exit(0);
 	}
 	
@@ -124,17 +130,6 @@ public class Client extends JFrame implements Runnable{
 			sendMessage("successfully connected");
 		}catch(Exception e){
 			System.out.println("Failed to make connection");
-		}
-	}
-	
-	public void shutdown(){
-		try{
-			sendMessage("END");
-			input.close();
-			output.close();
-			connection.close();
-		}catch(Exception e){
-			System.out.println("Couldn't shutdown");
 		}
 	}
 	
