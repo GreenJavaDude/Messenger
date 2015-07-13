@@ -26,6 +26,7 @@ public class Chatting implements Runnable{
 								for(Stuff aStuff:server.getPeople()){
 									server.sendMessage(message, aStuff.getOutput());
 								}
+								server.showMessage(message);
 							}
 						}
 					}catch(Exception e){
